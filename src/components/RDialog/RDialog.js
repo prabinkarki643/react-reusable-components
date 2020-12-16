@@ -147,7 +147,7 @@ const Transition = forwardRef(function Transition(props, ref) {
             ? children({ close: handleClose })
             : children}
         </DialogContent>
-        {buttons.length > 0 && (
+        {buttons && buttons.length > 0 && (
           <DialogActions style={{ ...footerStyle }}>
             {buttons.map((btn, index) => {
               return (
