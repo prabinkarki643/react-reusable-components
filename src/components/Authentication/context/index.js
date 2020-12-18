@@ -19,8 +19,17 @@ const mockState = {
   authState: AuthState.LOGGEDIN,
   currentUser: { name: "pk" },
 };
-export const AuthenticationProvider = ({ children }) => {
+export const AuthenticationProvider = ({ children,config={
+  loginRedirectUrl:'',
+} }) => {
   const [authentication, setAuthentication] = useState(initialState);
+  const [authLoading, setAuthLoading] = useState(true);
+  const{loginRedirectUrl}=config
+  const changePathNameToLogin = ()=>{
+    if(loginRedirectUrl){
+      window.history.replaceState(null,loginRedirectUrl,loginRedirectUrl)
+    }
+  }
   //Get User From localStorage and set to the context
   useEffect(() => {
     const userFromLocalStorage = localStorage.getItem("userInfo");
@@ -28,12 +37,17 @@ export const AuthenticationProvider = ({ children }) => {
       ? JSON.parse(userFromLocalStorage)
       : {};
     setAuthentication({ ...authentication, ...userInfo });
+    if(!userInfo?.currentUser){
+      changePathNameToLogin()
+    }
+    setAuthLoading(false)
   }, []);
   return (
     <AuthenticationContext.Provider
       value={{
         authState: authentication.authState,
         currentUser: authentication.currentUser,
+        authLoading:authLoading,
         setAuthState: (state) =>
           setAuthentication({ ...authentication, authState: state }),
         setCurrentUser: (user) =>
@@ -43,6 +57,7 @@ export const AuthenticationProvider = ({ children }) => {
         logout: () => {
           setAuthentication(initialState);
           localStorage.removeItem("userInfo");
+          changePathNameToLogin()
         },
         loginSuccess: (user, remeberme = true) => {
           setAuthentication({
