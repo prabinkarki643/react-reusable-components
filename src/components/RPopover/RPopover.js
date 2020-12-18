@@ -1,7 +1,11 @@
 import React, { forwardRef, useImperativeHandle } from "react";
 import MUIPopover from "@material-ui/core/Popover";
-import { Container } from "@material-ui/core";
-
+import {
+  Card,
+  CardContent,
+  CardHeader
+} from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
 const RPopover = forwardRef(
   (
     {
@@ -10,6 +14,11 @@ const RPopover = forwardRef(
       anchorElementContainerStyle,
       paperStyle,
       maxWidth = "md",
+      headerStyle,
+      contentContainerStyle,
+      enableCloseIcon = false,
+      title,
+      cardActions,
       ...props
     },
     ref
@@ -54,15 +63,37 @@ const RPopover = forwardRef(
             horizontal: "center",
           }}
           PaperProps={{
-            style: { padding: 5, ...paperStyle },
+            style: { padding: 0, ...paperStyle },
           }}
           {...props}
         >
-          <Container maxWidth={maxWidth} style={{ padding: 0 }}>
-            {typeof children == "function"
-              ? children({ close: handleClose })
-              : children}
-          </Container>
+          <Card style={{ ...contentContainerStyle }}>
+            {(enableCloseIcon || title) && (
+              <CardHeader
+                style={{ ...headerStyle }}
+                title={title}
+                action={
+                  enableCloseIcon && (
+                    <CloseIcon
+                      style={{
+                        display: "block",
+                        float: "right",
+                        marginLeft: 10,
+                        cursor: "pointer",
+                      }}
+                      onClick={handleClose}
+                    />
+                  )
+                }
+              />
+            )}
+            <CardContent>
+              {typeof children == "function"
+                ? children({ close: handleClose })
+                : children}
+            </CardContent>
+            {cardActions}
+          </Card>
         </MUIPopover>
       </React.Fragment>
     );
