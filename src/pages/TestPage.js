@@ -7,6 +7,7 @@ import {
   RPDialog,
   RGridImageGallery,
   RSecuredGridImageGallery,
+  RSocialMedia,
 } from "../components";
 import { withRouterWithQuery } from "../hoc";
 
@@ -17,6 +18,7 @@ function TestPage(props) {
   return (
     <Root>
       <center>
+      <RSocialMedia/>
         <RDialog
           anchorElement={<div>R Dialog</div>}
           buttons={[
@@ -73,6 +75,8 @@ function TestPage(props) {
             justify: "center",
           }}
         />
+
+        
       </center>
     </Root>
   );
