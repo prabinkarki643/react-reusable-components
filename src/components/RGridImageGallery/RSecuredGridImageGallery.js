@@ -101,7 +101,7 @@ export default function RSecuredGridImageGallery({
     <React.Fragment>
       <RSpace {...spaceProps}>
       {images.map((img, index) => (
-        <div key={index} style={{position: "relative",...imageContainerStyle }}>
+        <RSpace.Item key={index} style={{position: "relative",...imageContainerStyle }}>
           <RSecureImage
             onClick={(uri) => handleClickOpen(index)}
             src={img.thumbnai || img.src}
@@ -117,7 +117,7 @@ export default function RSecuredGridImageGallery({
             }}
           />
           {img.afterImageElement && img.afterImageElement}
-        </div>
+        </RSpace.Item>
       ))}
       </RSpace>
 

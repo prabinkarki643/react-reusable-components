@@ -8,15 +8,82 @@ import CloseIcon from "@material-ui/icons/Close";
 import { Button } from "@material-ui/core";
 
 const Transition = forwardRef(function Transition(props, ref) {
-  return <Zoom  ref={ref} {...props}/>
+  return <Zoom ref={ref} {...props} />;
 });
 
- const RDialog = ({
+const CustomDialog = ({
+  controlled = false,
+  anchorElement,
+  anchorElementContainerStyle,
+  altAnchorElementWithCustomClick,
+  open,
+  onClose,
+  children,
+  ...props
+}) => {
+  const [isOpen, setIsOpen] = React.useState(open || false);
+
+  const handleClickOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  if (controlled) {
+    return (
+        <MUIDialog
+          open={open}
+          onClose={onClose}
+          maxWidth="md"
+          fullWidth
+          TransitionComponent={Transition}
+          keepMounted
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+          {...props}
+        >
+          {children}
+        </MUIDialog>
+    );
+  }
+  return (
+    <React.Fragment>
+      <div style={{ position: "relative" }}>
+        <div
+          onClick={handleClickOpen}
+          style={{ cursor: "pointer", ...anchorElementContainerStyle }}
+        >
+          {anchorElement}
+        </div>
+        {altAnchorElementWithCustomClick && altAnchorElementWithCustomClick}
+      </div>
+      <MUIDialog
+        open={isOpen}
+        maxWidth="md"
+        fullWidth
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        {...props}
+      >
+        {typeof children == "function"
+          ? children({ close: handleClose })
+          : children}
+      </MUIDialog>
+    </React.Fragment>
+  );
+};
+
+const RDialog = ({
   controlled = false,
   title,
   anchorElement,
   contentStyle,
-  disableBackdropClick=false,
+  disableBackdropClick = false,
   footerStyle,
   headerStyle,
   anchorElementContainerStyle,
@@ -49,7 +116,7 @@ const Transition = forwardRef(function Transition(props, ref) {
           TransitionComponent={Transition}
           keepMounted
           disableBackdropClick={disableBackdropClick}
-        disableEscapeKeyDown={disableBackdropClick}
+          disableEscapeKeyDown={disableBackdropClick}
           onClose={onClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
@@ -159,7 +226,7 @@ const Transition = forwardRef(function Transition(props, ref) {
                       btn.onClick();
                     if (closeOnButtonClicked) {
                       handleClose();
-                    }else if(btn.closeOnClick){
+                    } else if (btn.closeOnClick) {
                       handleClose();
                     }
                   }}
@@ -177,6 +244,8 @@ const Transition = forwardRef(function Transition(props, ref) {
       </MUIDialog>
     </React.Fragment>
   );
-}
+};
 
-export default RDialog
+RDialog.CustomDialog=CustomDialog
+
+export default RDialog;

@@ -1,3 +1,4 @@
+import { DialogContent } from "@material-ui/core";
 import { useRef, useState } from "react";
 import {
   Root,
@@ -44,6 +45,14 @@ function TestPage(props) {
         </RDialog>
 
         <RConfirmDialog anchorElement={<div>R Confirm Dialog</div>} />
+
+        <RDialog.CustomDialog anchorElement={<div>Custom Dialog</div>}>
+          {({close})=>(
+            <DialogContent>
+              <h1>Ok</h1>
+            </DialogContent>
+          )}
+        </RDialog.CustomDialog>
 
         <RPopconfirm anchorElement={<div> R Pop Confirm</div>} 
         message="Do pariatur tempor velit laboris amet aliquip incididunt minim elit aliqua laborum ut ipsum. Minim adipisicing exercitation non veniam dolore enim labore consectetur cupidatat nisi irure. Voluptate non nulla dolore tempor tempor exercitation tempor veniam commodo in irure voluptate. Adipisicing minim irure sit enim commodo in non quis esse nisi dolore."

@@ -10,12 +10,18 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function RSpace({ children,spacing=1,direction="row" ,...props }) {
+function Item({children,...props}) {
+  return (
+    <Grid item {...props}>{children}</Grid>
+  )
+}
+
+
+function RSpace({ children,spacing=1,direction="row" ,...props }) {
   const classes = useStyles();
 
   return (
     <Grid
-    
       container
       className={classes.root}
       spacing={spacing}
@@ -23,13 +29,10 @@ export default function RSpace({ children,spacing=1,direction="row" ,...props })
       alignItems="center"
       {...props}
     >
-      {children?.length > 1 ? (
-        children.map((child, index) => {
-          return <Grid item key={index}>{child}</Grid>;
-        })
-      ) : (
-        <Grid item>{children}</Grid>
-      )}
+      {children}
     </Grid>
   );
 }
+
+RSpace.Item=Item
+export default RSpace

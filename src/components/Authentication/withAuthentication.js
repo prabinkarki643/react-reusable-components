@@ -1,43 +1,15 @@
 import React from "react";
 import Authentication from "./Authentication";
-import {
-  AuthenticationConsumer,
-  AuthState,
-} from "./context";
+import useAuthentication from "./useAuthentication";
 
-export default function withAuthentication(
-  WrapperComponent,
-  onlyProps=true
-) {
-  if (onlyProps) {
-    return (props) => {
-      return (
-          <AuthenticationConsumer>
-            {(authentication) => {
-              return (
-                <WrapperComponent authentication={authentication} {...props} />
-              );
-            }}
-          </AuthenticationConsumer>
-      );
-    };
-  }
+export default function withAuthentication(WrapperComponent) {
   return (props) => {
-    return (
-        <AuthenticationConsumer>
-          {(authentication) => {
-            if (
-              authentication.authState == AuthState.LOGGEDIN &&
-              authentication.currentUser
-            ) {
-              return (
-                <WrapperComponent authentication={authentication} {...props} />
-              );
-            } else {
-              return <Authentication />;
-            }
-          }}
-        </AuthenticationConsumer>
-    );
+    const authentication = useAuthentication();
+
+    if (!authentication.session) {
+      return <Authentication />;
+    }
+
+    return <WrapperComponent authentication={authentication} {...props} />;
   };
 }

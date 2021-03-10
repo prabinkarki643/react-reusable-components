@@ -11,73 +11,70 @@ export const AuthState = {
 
 export const AuthenticationContext = React.createContext();
 
-const initialState = {
-  authState: AuthState.LOGIN,
-  currentUser: null,
-};
-const mockState = {
-  authState: AuthState.LOGGEDIN,
-  currentUser: { name: "pk" },
-};
+const mockSession ={
+  user:{name:"MockUser",username:"Pk"}
+}
 export const AuthenticationProvider = ({ children,config={
   loginRedirectUrl:'',
 } }) => {
-  const [authentication, setAuthentication] = useState(initialState);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [session, setSession] = useState(mockSession);
+  const [state, setState] = useState({
+    loading: true,
+    error: null,
+    authState:AuthState.LOGIN
+  });
   const{loginRedirectUrl}=config
   const changePathNameToLogin = ()=>{
     if(loginRedirectUrl){
       window.history.replaceState(null,loginRedirectUrl,loginRedirectUrl)
     }
   }
-  //Get User From localStorage and set to the context
-  useEffect(() => {
-    const userFromLocalStorage = localStorage.getItem("userInfo");
-    const userInfo = userFromLocalStorage
-      ? JSON.parse(userFromLocalStorage)
-      : {};
-    setAuthentication({ ...authentication, ...userInfo });
-    if(!userInfo?.currentUser){
+  const authCheck = ()=>{
+    setState({ ...state, loading: true,error:null });
+    const userSessionFromLocalStorage = localStorage.getItem("user_session");
+    const user_session = userSessionFromLocalStorage
+      ? JSON.parse(userSessionFromLocalStorage)
+      : null;
+    setSession(user_session)
+    if(!user_session){
       changePathNameToLogin()
     }
-    setAuthLoading(false)
+    setState({ ...state, loading: false });
+  }
+  const logOutUserSession = async ()=>{
+    localStorage.removeItem("user_session");
+      setSession(null);
+  }
+
+  //Get User From localStorage and set to the context
+  useEffect(() => {
+    authCheck()
   }, []);
   return (
     <AuthenticationContext.Provider
       value={{
-        authState: authentication.authState,
-        currentUser: authentication.currentUser,
-        authLoading:authLoading,
-        setAuthState: (state) =>
-          setAuthentication({ ...authentication, authState: state }),
-        setCurrentUser: (user) =>
-          setAuthentication({ ...authentication, currentUser: user }),
-        setAuthentication: (obj) =>
-          setAuthentication({ ...authentication, ...obj }),
-        logout: () => {
-          setAuthentication(initialState);
-          localStorage.removeItem("userInfo");
-          changePathNameToLogin()
-        },
-        loginSuccess: (user, remeberme = true) => {
-          setAuthentication({
-            ...authentication,
-            currentUser: user,
-            authState: AuthState.LOGGEDIN,
-          });
-          if (remeberme) {
-            const userInfo = {
-              authState: AuthState.LOGGEDIN,
-              currentUser: user,
-            };
-            localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        session: session,
+        authLoading: state.loading,
+        authError: state.error,
+        authState: state.authState,
+        setSession: (session,rememberme=false) => {
+          if(rememberme){
+            localStorage.setItem("user_session",JSON.stringify(session))
           }
+          setSession(session)
         },
+        setAuthState: (authState) => {
+          setState({ ...state,authState:authState });
+        },
+        logout: logOutUserSession,
       }}
     >
       <AuthenticationContext.Consumer>
         {(authentication) => {
           AuthHandler.authentication = authentication;
+          if (authentication.authLoading) {
+            return <div>Authenticating...</div>;
+          }
           return children;
         }}
       </AuthenticationContext.Consumer>
@@ -85,3 +82,4 @@ export const AuthenticationProvider = ({ children,config={
   );
 };
 export const AuthenticationConsumer = AuthenticationContext.Consumer;
+

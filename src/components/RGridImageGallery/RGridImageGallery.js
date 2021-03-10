@@ -35,7 +35,7 @@ export default function RGridImageGallery({
     <React.Fragment>
       <RSpace {...spaceProps}>
         {images.map((img, index) => (
-          <div
+          <RSpace.Item
             key={index}
             style={{position: "relative", ...imageContainerStyle }}
           >
@@ -54,7 +54,7 @@ export default function RGridImageGallery({
               }}
             />
             {img.afterImageElement && img.afterImageElement}
-          </div>
+          </RSpace.Item>
         ))}
       </RSpace>
 

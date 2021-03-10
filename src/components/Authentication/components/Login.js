@@ -13,7 +13,7 @@ const AppLogo = ()=>(
 )
 
 export default function Login() {
-  const { setAuthState, loginSuccess } = useAuthentication();
+  const { setAuthState, setSession } = useAuthentication();
   const [fData, setFData] = useState({
     userName: "",
     password: "",
@@ -22,7 +22,9 @@ export default function Login() {
 
   const onSubmitLogin = (e) => {
     e.preventDefault();
-    loginSuccess({ userName: fData.userName }, fData.rememberme);
+    const { userName, password, rememberme } = fData;
+    const name = userName.includes('@')?userName.split('@')[0]:userName
+    setSession({ user: { name: name,username:name } }, rememberme);
   };
   return (
     <div>
