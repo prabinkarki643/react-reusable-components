@@ -1,4 +1,4 @@
-import { DialogContent } from "@material-ui/core";
+import { DialogContent, Typography } from "@material-ui/core";
 import { useRef, useState } from "react";
 import {
   Root,
@@ -9,17 +9,18 @@ import {
   RGridImageGallery,
   RSecuredGridImageGallery,
   RSocialMedia,
+  RFieldSet,
+  RMenu,
 } from "../components";
 import { withRouterWithQuery } from "../hoc";
 
-
 function TestPage(props) {
   const [open, setOpen] = useState(false);
-  console.log("routes",props.routes);
+  console.log("routes", props.routes);
   return (
     <Root>
       <center>
-      <RSocialMedia/>
+        <RSocialMedia />
         <RDialog
           anchorElement={<div>R Dialog</div>}
           buttons={[
@@ -31,13 +32,12 @@ function TestPage(props) {
             },
             {
               label: "CANCEL",
-              closeOnClick:true
+              closeOnClick: true,
             },
           ]}
         >
           {(close) => <div>Hello R DIalog</div>}
         </RDialog>
-      
 
         <button onClick={() => setOpen(true)}>Open Controlled Dialog</button>
         <RDialog controlled open={open} onClose={() => setOpen(false)}>
@@ -47,16 +47,18 @@ function TestPage(props) {
         <RConfirmDialog anchorElement={<div>R Confirm Dialog</div>} />
 
         <RDialog.CustomDialog anchorElement={<div>Custom Dialog</div>}>
-          {({close})=>(
+          {({ close }) => (
             <DialogContent>
               <h1>Ok</h1>
             </DialogContent>
           )}
         </RDialog.CustomDialog>
 
-        <RPopconfirm anchorElement={<div> R Pop Confirm</div>} 
-        message="Do pariatur tempor velit laboris amet aliquip incididunt minim elit aliqua laborum ut ipsum. Minim adipisicing exercitation non veniam dolore enim labore consectetur cupidatat nisi irure. Voluptate non nulla dolore tempor tempor exercitation tempor veniam commodo in irure voluptate. Adipisicing minim irure sit enim commodo in non quis esse nisi dolore."
-        title="Title" />
+        <RPopconfirm
+          anchorElement={<div> R Pop Confirm</div>}
+          message="Do pariatur tempor velit laboris amet aliquip incididunt minim elit aliqua laborum ut ipsum. Minim adipisicing exercitation non veniam dolore enim labore consectetur cupidatat nisi irure. Voluptate non nulla dolore tempor tempor exercitation tempor veniam commodo in irure voluptate. Adipisicing minim irure sit enim commodo in non quis esse nisi dolore."
+          title="Title"
+        />
 
         <RGridImageGallery
           spaceProps={{
@@ -85,7 +87,20 @@ function TestPage(props) {
           }}
         />
 
-        
+        <RFieldSet legendText="Test Label">
+          <div>Hello dear</div>
+        </RFieldSet>
+
+        <RMenu anchorElement={<div>Test</div>}>
+          {({handleClose})=>(
+            <div>
+            <RMenu.Item onClick={()=>handleClose()}>Menu1</RMenu.Item>
+            <RMenu.Item>Menu2</RMenu.Item>
+            <RMenu.Item>Menu3</RMenu.Item>
+            <RMenu.Item>Menu4</RMenu.Item>
+            </div>
+          )}
+        </RMenu>
       </center>
     </Root>
   );

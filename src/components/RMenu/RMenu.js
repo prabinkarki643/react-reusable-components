@@ -1,6 +1,6 @@
 import React from "react";
 import MUIMenu from "@material-ui/core/Menu";
-
+import MenuItem from "@material-ui/core/MenuItem";
 
 export default function RMenu({
   anchorElement,
@@ -12,40 +12,41 @@ export default function RMenu({
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
+  const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const addCloseHandler = (child) => {
-    return React.cloneElement(child, {
-      onClick: ()=>{
-          child.props.onClick && child.props.onClick()
-          handleClose()
+  const anchorElementWithHandleOpen = () => {
+    return React.cloneElement(anchorElement, {
+      onClick: (e) => {
+        anchorElement.props.onPress && anchorElement.props.onPress();
+        handleOpen(e);
+      },
+      style: {
+        cursor: "pointer",
+        display: "inline-block",
+        ...anchorElement.props.style,
       },
     });
   };
   return (
     <React.Fragment>
-        <div onClick={handleClick} style={{display:'inline-block',...anchorElementStyle}}>
-          {anchorElement}
-        </div>
-        <MUIMenu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          {...props}
-        >
-          {children?.length > 1
-            ? children.map((child, index) => {
-                return closeOnClickItem ? addCloseHandler(child) :child;
-              })
-            : closeOnClickItem?addCloseHandler(children):children}
-        </MUIMenu>
-      </React.Fragment>
-  )
+      {anchorElementWithHandleOpen()}
+      <MUIMenu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        {...props}
+      >
+        {children({ handleClose: handleClose })}
+      </MUIMenu>
+    </React.Fragment>
+  );
 }
+
+RMenu.Item = MenuItem;

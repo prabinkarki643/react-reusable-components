@@ -1,17 +1,12 @@
 import React, { forwardRef, useImperativeHandle } from "react";
 import MUIPopover from "@material-ui/core/Popover";
-import {
-  Card,
-  CardContent,
-  CardHeader
-} from "@material-ui/core";
+import { Card, CardContent, CardHeader } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 const RPopover = forwardRef(
   (
     {
       children,
       anchorElement,
-      anchorElementContainerStyle,
       paperStyle,
       maxWidth = "md",
       headerStyle,
@@ -29,7 +24,7 @@ const RPopover = forwardRef(
       },
     }));
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleClick = (event) => {
+    const handleOpen = (event) => {
       setAnchorEl(event.currentTarget);
     };
 
@@ -37,18 +32,23 @@ const RPopover = forwardRef(
       setAnchorEl(null);
     };
 
+    const anchorElementWithHandleOpen = () => {
+      return React.cloneElement(anchorElement, {
+        onClick: (e) => {
+          anchorElement.props.onPress && anchorElement.props.onPress();
+          handleOpen(e);
+        },
+        style: {
+          cursor: "pointer",
+          display: "inline-block",
+          ...anchorElement.props.style,
+        },
+      });
+    };
+
     return (
       <React.Fragment>
-        <div
-          style={{
-            cursor: "pointer",
-            display: "inline-block",
-            ...anchorElementContainerStyle,
-          }}
-          onClick={handleClick}
-        >
-          {anchorElement}
-        </div>
+        {anchorElementWithHandleOpen()}
 
         <MUIPopover
           open={Boolean(anchorEl)}
@@ -89,10 +89,13 @@ const RPopover = forwardRef(
             )}
             <CardContent>
               {typeof children == "function"
-                ? children({ close: handleClose })
+                ? children({ handleClose: handleClose })
                 : children}
             </CardContent>
-            {cardActions}
+            
+            {typeof cardActions == "function"
+              ? cardActions({ handleClose: handleClose })
+              : cardActions}
           </Card>
         </MUIPopover>
       </React.Fragment>

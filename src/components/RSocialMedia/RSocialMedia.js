@@ -36,9 +36,9 @@ export default function RSocialMedia({containerStyle,buttonSize="small",openInNe
   ];
   return (
     <Grid container spacing={spacing} style={{width:'100%',...containerStyle}} {...props}>
-      {socialMediaLinks.map((media) => {
+      {socialMediaLinks.map((media,index) => {
         return (
-          <Grid item>
+          <Grid item key={index}>
             <Fab
               size={buttonSize}
               color="primary"

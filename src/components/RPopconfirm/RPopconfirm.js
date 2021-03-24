@@ -44,12 +44,11 @@ export default function RPopconfirm({
   return (
     <RPopover
       anchorElement={anchorElement}
-      anchorElementContainerStyle={anchorElementContainerStyle}
       paperStyle={paperStyle}
       maxWidth={maxWidth}
       {...props}
     >
-      {({ close }) => (
+      {({ handleClose }) => (
         <>
           <DialogContent style={{ padding: 0, ...contentStyle }}>
             <Alert severity={severity}>
@@ -68,7 +67,7 @@ export default function RPopconfirm({
                         typeof btn.onClick == "function" &&
                         btn.onClick();
                       if (closeOnButtonClicked) {
-                        close();
+                        handleClose();
                       }
                     }}
                     variant="contained"
