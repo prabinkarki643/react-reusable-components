@@ -11,6 +11,7 @@ import {
   RSocialMedia,
   RFieldSet,
   RMenu,
+  RGlassCard,
 } from "../components";
 import { withRouterWithQuery } from "../hoc";
 
@@ -101,6 +102,12 @@ function TestPage(props) {
             </div>
           )}
         </RMenu>
+
+        <RGlassCard>
+          <div>
+            <p>Prabin Karki Here</p>
+          </div>
+        </RGlassCard>
       </center>
     </Root>
   );
